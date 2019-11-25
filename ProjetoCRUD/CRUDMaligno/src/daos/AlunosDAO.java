@@ -12,10 +12,10 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
     @Override
     public void create(Aluno entidade) throws Exception {
         if (entidade == null)
-            throw new Exception("O campo aluno não foi preenchido");
+            throw new Exception("O campo aluno nao foi preenchido");
 
         if (existe(entidade.getRa()))
-            throw new Exception("Este RA já existe");
+            throw new Exception("Este RA ja existe");
 
         try {
             String sql;
@@ -33,9 +33,9 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
     }
 
     @Override
-    public boolean existe(String cod) throws Exception {
-        if (cod == null || cod.length() != 5)
-            throw new Exception("RA é invalido!");
+    public boolean existe(String ra) throws Exception {
+        if (ra == null || ra.length() != 5)
+            throw new Exception("RA invalido!");
 
         boolean raEhValido = false;
 
@@ -43,7 +43,7 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
             String sql;
             sql = "SELECT * FROM ALUNO WHERE RA = ?";
             BDSQLServer.COMANDO.prepareStatement(sql);
-            BDSQLServer.COMANDO.setString(1, cod);
+            BDSQLServer.COMANDO.setString(1, ra);
             MeuResultSet rs = (MeuResultSet) BDSQLServer.COMANDO.executeQuery();
             raEhValido = rs.first();
         } catch (SQLException erro) {
@@ -57,10 +57,10 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
     public void update(Aluno entidade) throws Exception {
 
         if (entidade == null)
-            throw new Exception("Valor de campo inválido");
+            throw new Exception("Valor de campo invalido");
 
         if (!existe(entidade.getRa()))
-            throw new Exception("Este RA não existe");
+            throw new Exception("Este RA nao existe");
 
         try {
             String sql = "UPDATE ALUNO SET nome = ?, email = ? WHERE ra = ?";
@@ -92,7 +92,7 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
             BDSQLServer.COMANDO.commit();
         } catch (SQLException erro) {
             // System.out.println(erro.getMessage());
-            System.out.println("Erro ao deletar usu�rio");
+            System.out.println("Erro ao deletar usuario");
         }
     }
 }

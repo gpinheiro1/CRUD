@@ -11,10 +11,10 @@ public class FazemDAO implements CrudInterface<Fez, String>{
 	@Override
 	public void create(Fez entidade) throws Exception  {
 		if (entidade == null)
-			throw new Exception("O campo das mat�rias feitas pelo Aluno n�o foi preenchido");
+			throw new Exception("O campo das materias feitas pelo Aluno nao foi preenchido");
 
 		if (existe(entidade.getRa()))
-			throw new Exception("Este RA j� existe");
+			throw new Exception("Este RA ja existe");
 
 		try {
 		String sql;
@@ -34,8 +34,9 @@ public class FazemDAO implements CrudInterface<Fez, String>{
 
 	@Override
 	public boolean existe(String cod) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		boolean codEhValido = false;
+		return codEhValido;
 	}
 
 	@Override
