@@ -1,0 +1,9 @@
+package interfaces;
+
+public interface CrudInterface<T> {
+
+	public void create(T entidade) throws Exception;
+	public boolean raExiste(String cod) throws Exception;
+	public void update(T entidade);
+	public void delete(String cod);
+}

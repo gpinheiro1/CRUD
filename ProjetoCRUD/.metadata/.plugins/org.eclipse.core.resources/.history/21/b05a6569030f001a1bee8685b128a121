@@ -1,0 +1,32 @@
+package daos;
+
+import dbos.Aluno;
+import interfaces.CrudInterface;
+
+public class AlunosDAO implements CrudInterface<Aluno> {
+
+	@Override
+	public void create(Aluno entidade) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean get(String cod) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void update(Aluno entidade) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void delete(String cod) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

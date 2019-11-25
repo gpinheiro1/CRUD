@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="dbos.Materia"/>
+<fullyQualifiedTypeName name="dbos.Fez"/>
+<fullyQualifiedTypeName name="bd.core.MeuResultSet"/>
+<fullyQualifiedTypeName name="java.sql.SQLException"/>
+<fullyQualifiedTypeName name="dbos.Aluno"/>
+<fullyQualifiedTypeName name="interfaces.CrudInterface"/>
+<fullyQualifiedTypeName name="validations.ValidationUtils"/>
+<fullyQualifiedTypeName name="daos.FazemDAO"/>
+<fullyQualifiedTypeName name="daos.AlunosDAO"/>
+<fullyQualifiedTypeName name="daos.MateriasDAO"/>
+<fullyQualifiedTypeName name="bd.BDSQLServer"/>
+</qualifiedTypeNameHistroy>

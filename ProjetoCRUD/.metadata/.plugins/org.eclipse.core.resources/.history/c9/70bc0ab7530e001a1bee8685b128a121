@@ -1,0 +1,41 @@
+package dbos;
+
+import validations.ValidationUtils;
+
+public class Fez {
+	private String ra;
+	private String codMateria;
+	private float nota;
+	private int frequencia;
+	
+	public Fez() {
+		
+	}
+	
+	public String getRa() {
+		return this.ra;
+	}
+	
+	public void setRa(String ra) throws Exception {
+		this.ra = ValidationUtils.validaRa(ra);
+	}
+	
+	public String getCodMateria() {
+		return this.codMateria;
+	}
+	
+	public void setCodMateria(String codMateria) throws Exception {
+		if(codMateria == null || codMateria.length() < 0)
+			throw new Exception("O código da matéria é inválido");
+		this.codMateria = codMateria;
+	}
+	
+	public float getNota() {
+		return this.nota;
+	}
+	
+	public void setNota(float nota) {
+		if(nota == null)
+			nota = 0.0;
+	}
+}

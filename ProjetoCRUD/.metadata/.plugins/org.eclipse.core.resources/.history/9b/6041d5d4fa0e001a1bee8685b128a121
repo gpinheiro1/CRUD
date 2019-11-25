@@ -1,0 +1,9 @@
+package daos;
+
+public interface RepositorioCRUD<T> {
+	
+	public void create(T entidade);
+	public boolean get(String cod);
+	public void update(T entidade);
+	public void delete(String cod);
+}

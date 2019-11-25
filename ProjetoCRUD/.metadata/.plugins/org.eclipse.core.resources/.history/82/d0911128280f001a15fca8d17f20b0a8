@@ -1,0 +1,33 @@
+package daos;
+
+import dbos.Fez;
+import interfaces.CrudInterface;
+
+public class FazemDAO implements CrudInterface<Fez>{
+
+	@Override
+	public void create(Fez entidade) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean raExiste(String cod) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void update(Fez entidade) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void delete(String cod) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
+}
