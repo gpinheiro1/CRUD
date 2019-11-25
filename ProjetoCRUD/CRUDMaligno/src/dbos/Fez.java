@@ -3,6 +3,7 @@ package dbos;
 import validations.ValidationUtils;
 
 public class Fez implements Cloneable {
+
 	private String ra;
 	private String codMateria;
 	private float nota;
@@ -51,9 +52,9 @@ public class Fez implements Cloneable {
 		String ret = "";
 		
 		ret += "RA: " + this.ra + "\n";
-		ret += "Cod. Matéria: " + this.codMateria + "\n";
+		ret += "Cod. Matï¿½ria: " + this.codMateria + "\n";
 		ret += "Nota: " + this.nota + "\n";
-		ret += "Frequência: " + this.frequencia;
+		ret += "Frequï¿½ncia: " + this.frequencia;
 		
 		return ret;
 	}

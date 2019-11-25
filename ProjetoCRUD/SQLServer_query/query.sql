@@ -24,39 +24,52 @@ references Materia(codMateria)
 select * from Fez
 
 --alunos que tiveram 0% de frequencia
-select a.nome
+ select
+	a.nome
 from
-Aluno a,
-Fez f
+	Aluno a,
+	Fez f
 where
-f.ra = a.ra and
-f.frequencia = 0
+	f.ra = a.ra
+	and f.frequencia = 0;
 
 --nome das materias sem reprovacao
-select m.nomeMateria
+ select
+	m.nomeMateria
 from
-Materia m,
-Fez f
+	Materia m,
+	Fez f
 where
-m.codMateria = f.codMateria and
-AVG(f.nota) >= 5
+	m.codMateria = f.codMateria
+group by
+	m.nomemateria
+having
+	avg(f.nota) >= 5;
 
 --nome das materias ordenado de forma crescente pela media dos alunos
-select m.nomeMateria
+ select
+	m.nomeMateria
 from
-Materia m,
-Fez f
+	Materia m,
+	Fez f
 where
-m.codMateria = f.codMateria
-order by avg(f.nota)
+	m.codMateria = f.codMateria
+group by
+	m.nomemateria
+order by
+	avg(f.nota);
 
---nome dos alunos ordenados crescente pela média de suas matérias
-select a.nome
-from 
-Aluno a,
-Fez f,
-Materia m
+--nome dos alunos ordenados crescente pela mÃ©dia de suas matÃ©rias
+ select
+	a.nome
+from
+	Aluno a,
+	Fez f,
+	Materia m
 where
-a.ra = f.ra and
-m.codMateria = f.codMateria
-order by avg(f.nota)
+	a.ra = f.ra
+	and m.codMateria = f.codMateria
+group by
+	a.nome
+order by
+	avg(f.nota);
