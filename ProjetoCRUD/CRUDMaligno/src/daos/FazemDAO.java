@@ -6,15 +6,15 @@ import bd.BDSQLServer;
 import dbos.Fez;
 import interfaces.CrudInterface;
 
-public class FazemDAO implements CrudInterface<Fez>{
+public class FazemDAO implements CrudInterface<Fez, String>{
 
 	@Override
 	public void create(Fez entidade) throws Exception  {
 		if (entidade == null)
-			throw new Exception("O campo das matérias feitas pelo Aluno não foi preenchido");
+			throw new Exception("O campo das matï¿½rias feitas pelo Aluno nï¿½o foi preenchido");
 
-		if (raExiste(entidade.getRa()))
-			throw new Exception("Este RA já existe");
+		if (existe(entidade.getRa()))
+			throw new Exception("Este RA jï¿½ existe");
 
 		try {
 		String sql;
@@ -33,7 +33,7 @@ public class FazemDAO implements CrudInterface<Fez>{
 	}
 
 	@Override
-	public boolean raExiste(String cod) {
+	public boolean existe(String cod) {
 		// TODO Auto-generated method stub
 		return false;
 	}
