@@ -79,16 +79,16 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
     @Override
     public void delete(String ra) throws Exception {
         if (ra == null)
-            throw new Exception("RA inv�lido");
+            throw new Exception("RA invalido");
 
         if (!existe(ra))
-            throw new Exception("Este RA n�o existe!");
+            throw new Exception("Este RA nao existe!");
 
         try {
             String sql = "DELETE * FROM ALUNO WHERE RA = ?";
             BDSQLServer.COMANDO.prepareStatement(sql);
             BDSQLServer.COMANDO.setString(1, ra);
-            BDSQLServer.COMANDO.executeQuery();
+            BDSQLServer.COMANDO.executeUpdate();
             BDSQLServer.COMANDO.commit();
         } catch (SQLException erro) {
             // System.out.println(erro.getMessage());

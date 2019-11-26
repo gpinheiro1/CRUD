@@ -68,7 +68,7 @@ public class MateriasDAO implements CrudInterface<Materia, String> {
 		String sql = "DELETE FROM MATERIA WHERE CODMATERIA = ?";
 		BDSQLServer.COMANDO.prepareStatement(sql);
 		BDSQLServer.COMANDO.setString(1, cod);
-		BDSQLServer.COMANDO.executeQuery();
+		BDSQLServer.COMANDO.executeUpdate();
 		BDSQLServer.COMANDO.commit();
 		}catch(SQLException erro) {
 			

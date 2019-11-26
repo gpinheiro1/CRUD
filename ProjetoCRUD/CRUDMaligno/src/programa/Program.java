@@ -11,7 +11,8 @@ public class Program {
 			AlunosDAO dao = new AlunosDAO();
 			// dao.create(eu);
 			dao.update(eu);
-
+			Aluno lucas = new Aluno("aaaaa","l1cas","lucas@olar");
+			System.out.println(lucas);
 		} catch (Exception erro) {
 			System.out.println(erro.getMessage());
 		}
