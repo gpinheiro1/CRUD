@@ -1,7 +1,0 @@
-package daos;
-
-import dbos.Aluno;
-
-public class AlunosDAO {
-
-}

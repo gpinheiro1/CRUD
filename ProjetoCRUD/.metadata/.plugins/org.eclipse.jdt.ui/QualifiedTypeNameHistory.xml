@@ -9,6 +9,8 @@
 <fullyQualifiedTypeName name="validations.ValidationUtils"/>
 <fullyQualifiedTypeName name="daos.FazemDAO"/>
 <fullyQualifiedTypeName name="daos.AlunosDAO"/>
-<fullyQualifiedTypeName name="daos.MateriasDAO"/>
 <fullyQualifiedTypeName name="bd.BDSQLServer"/>
+<fullyQualifiedTypeName name="daos.MateriasDAO"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.util.List"/>
 </qualifiedTypeNameHistroy>
