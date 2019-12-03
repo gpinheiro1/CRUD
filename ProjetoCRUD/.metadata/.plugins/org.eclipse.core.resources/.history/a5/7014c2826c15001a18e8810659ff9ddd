@@ -6,11 +6,6 @@ public class Materia {
 	private String codMateria;
 	private String nomeMateria;
 	
-	public Materia () {
-		this.codMateria = null;
-		this.nomeMateria = null;
-	}
-	
 	public Materia (String codMateria, String nomeMateria) throws Exception {
 		this.setCodMateria(codMateria);
 		this.setNomeMateria(nomeMateria);

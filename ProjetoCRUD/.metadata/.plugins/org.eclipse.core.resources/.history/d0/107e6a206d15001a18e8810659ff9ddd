@@ -104,10 +104,10 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
     		BDSQLServer.COMANDO.prepareStatement(sql);
     		MeuResultSet rs = (MeuResultSet)BDSQLServer.COMANDO.executeQuery();
     		while(rs.next()) {
-    			Aluno aluno = new Aluno();
+    			Aluno aluno = new Aluno("19381", "Aluno Teste", "aluno@teste.com.br");
     			aluno.setNome(rs.getString("nome"));
     			aluno.setRa(rs.getString("ra"));
-    			//aluno.setEmail(rs.getString("email"));
+    			aluno.setEmail(rs.getString("email"));
     			alunos.add(aluno);
     	}
     	return alunos;
@@ -120,10 +120,10 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
     	BDSQLServer.COMANDO.prepareStatement(sql);
     	MeuResultSet rs = (MeuResultSet) BDSQLServer.COMANDO.executeQuery();
     	while(rs.next()) {
-    		Aluno alu = new Aluno();
+    		Aluno alu = new Aluno("12345", "Outro Aluno Teste", "alunotest@gmail.com");
     		alu.setNome(rs.getString("nome"));
     		alu.setRa(rs.getString("ra"));
-    		//alu.setEmail(rs.getString("email"));
+    		alu.setEmail(rs.getString("email"));
     		alunos.add(alu);
     	}
     	return alunos;

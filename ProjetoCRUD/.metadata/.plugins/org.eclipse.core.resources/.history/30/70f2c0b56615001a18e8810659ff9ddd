@@ -1,8 +1,6 @@
 package daos;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import bd.BDSQLServer;
 import bd.core.MeuResultSet;
@@ -76,35 +74,5 @@ public class MateriasDAO implements CrudInterface<Materia, String> {
 			
 			System.out.println(erro.getMessage());
 		}
-	}
-	
-	public static List<Materia> nomeMateriasSemReprovacao() throws Exception {
-		List<Materia> materias = new ArrayList<Materia>();
-		String sql = "SELECT M.NOMEMATERIA FROM MATERIA M, FEZ F WHERE" +
-					"M.CODMATERIA = F.CODMATERIA GROUP BY M.NOMEMATERIA HAVING AVG(F.NOTA) >= 5";
-		BDSQLServer.COMANDO.prepareStatement(sql);
-		MeuResultSet rs = (MeuResultSet) BDSQLServer.COMANDO.executeQuery();
-		while(rs.next()) {
-			Materia materia = new Materia("DS201", "Tecnicas De Programacao");
-			materia.setCodMateria(rs.getString("codMateria"));
-			materia.setNomeMateria(rs.getString("nomeMateria"));
-			materias.add(materia);
-		}
-		return materias;
-	}
-	
-	public static List<Materia> nomeMateriasOrdenadasPorMediaDeAluno() throws Exception {
-		List<Materia> materias = new ArrayList<Materia>();
-		String sql = "SELECT M.NOMEMATERIA FROM MATERIA M, FEZ F, WHERE" +
-		"M.CODMATERIA = F.CODMATERIA GROUP BY M.NOMEMATERIA ORDER BY AVG(F.NOTA)";
-		BDSQLServer.COMANDO.prepareStatement(sql);
-		MeuResultSet rs = (MeuResultSet) BDSQLServer.COMANDO.executeQuery();
-		while(rs.next()) {
-			Materia materia = new Materia();
-			materia.setNomeMateria(rs.getString("nomeMateria"));
-			materia.setCodMateria(rs.getString("codMateria"));
-			materias.add(materia);
-		}
-		return materias;
 	}
 }
