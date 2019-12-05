@@ -10,7 +10,7 @@ import interfaces.CrudInterface;
 public class AlunosDAO implements CrudInterface<Aluno, String> {
 
     @Override
-    public void create(Aluno entidade) throws Exception {
+    public boolean create(Aluno entidade) throws Exception {
         if (entidade == null)
             throw new Exception("O campo aluno nao foi preenchido");
 
@@ -24,11 +24,14 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
             BDSQLServer.COMANDO.setString(1, entidade.getRa());
             BDSQLServer.COMANDO.setString(2, entidade.getNome());
             BDSQLServer.COMANDO.setString(3, entidade.getEmail());
-            BDSQLServer.COMANDO.executeUpdate();
+            int linhasAfetadas = BDSQLServer.COMANDO.executeUpdate();
             BDSQLServer.COMANDO.commit();
+            
+            return linhasAfetadas > 0;
         } catch (SQLException erro) {
             // System.out.println(erro.getMessage());
             System.out.println("Erro ao inserir dados de Aluno");
+            return false;
         }
     }
 
@@ -95,4 +98,38 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
             System.out.println("Erro ao deletar usuario");
         }
     }
+<<<<<<< HEAD
+=======
+    
+    public static List<Aluno> frequenciaZero() throws Exception {
+    		List<Aluno> alunos = new ArrayList<Aluno>();
+    		String sql = "SELECT A.NOME FROM ALUNO A, FEZ F WHERE F.RA = A.RA AND F.FREQUENCIA = 0";
+    		BDSQLServer.COMANDO.prepareStatement(sql);
+    		MeuResultSet rs = (MeuResultSet)BDSQLServer.COMANDO.executeQuery();
+    		while(rs.next()) {
+    			Aluno aluno = new Aluno();
+    			aluno.setNome(rs.getString("nome"));
+    			aluno.setRa(rs.getString("ra"));
+    			//aluno.setEmail(rs.getString("email"));
+    			alunos.add(aluno);
+    	}
+    	return alunos;
+    }
+    
+    public static List<Aluno> nomesPorMediaDeAlunos() throws Exception {
+    	List<Aluno> alunos = new ArrayList<Aluno>();
+    	String sql = "SELECT A.NOME FROM ALUNO A, FEZ F, MATERIA M WHERE" +
+    				"A.RA = F.RA AND M.CODMATERIA = F.CODMATERIA GROUP BY A.NOME ORDER BY AVG(F.NOTA)";
+    	BDSQLServer.COMANDO.prepareStatement(sql);
+    	MeuResultSet rs = (MeuResultSet) BDSQLServer.COMANDO.executeQuery();
+    	while(rs.next()) {
+    		Aluno alu = new Aluno();
+    		alu.setNome(rs.getString("nome"));
+    		alu.setRa(rs.getString("ra"));
+    		//alu.setEmail(rs.getString("email"));
+    		alunos.add(alu);
+    	}
+    	return alunos;
+    }
+>>>>>>> 2ad3269... made graphical interface at netbeans
 }

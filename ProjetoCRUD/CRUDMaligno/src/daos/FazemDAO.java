@@ -10,7 +10,7 @@ import interfaces.CrudInterface;
 public class FazemDAO implements CrudInterface<Fez, String>{
 
 	@Override
-	public void create(Fez entidade) throws Exception  {
+	public boolean create(Fez entidade) throws Exception  {
 		if (entidade == null)
 			throw new Exception("O campo das materias feitas pelo Aluno nao foi preenchido");
 
@@ -25,11 +25,14 @@ public class FazemDAO implements CrudInterface<Fez, String>{
 		BDSQLServer.COMANDO.setString(2, entidade.getCodMateria());
 		BDSQLServer.COMANDO.setFloat(3, entidade.getNota());
 		BDSQLServer.COMANDO.setInt(3, entidade.getFrequencia());
-		BDSQLServer.COMANDO.executeUpdate();
+		int linhasAfetadas = BDSQLServer.COMANDO.executeUpdate();
 		BDSQLServer.COMANDO.commit();
+            
+                return linhasAfetadas > 0;
 		} catch(SQLException erro) {
 			// System.out.println(erro.getMessage());
 			System.out.println("Erro ao inserir dados");
+                        return false;
 		}
 	}
 

@@ -10,9 +10,10 @@ import interfaces.CrudInterface;
 public class MateriasDAO implements CrudInterface<Materia, String> {
 
 	@Override
-	public void create(Materia entidade) throws Exception {
+	public boolean create(Materia entidade) throws Exception {
 		if (entidade == null)
 			throw new Exception("O campo materia nao foi preenchido");
+                return false;
 	}
 
 	@Override
