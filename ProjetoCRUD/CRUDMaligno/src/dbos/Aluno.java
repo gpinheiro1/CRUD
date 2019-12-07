@@ -12,6 +12,10 @@ public class Aluno implements Cloneable {
 		this.setNome(nome);
 		this.setEmail(email);
 	}
+
+    public Aluno() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 	
 	public String getRa() {
 		return this.ra;
@@ -27,7 +31,7 @@ public class Aluno implements Cloneable {
 	
 	public void setNome(String nome) throws Exception {
 		if(nome == null)
-			throw new Exception("O campo nome está vazio!");
+			throw new Exception("O campo nome estï¿½ vazio!");
 		this.nome = nome;
 	}
 	
@@ -37,7 +41,7 @@ public class Aluno implements Cloneable {
 	
 	public void setEmail(String email) throws Exception {
 		if(email == null)
-			throw new Exception("O campo email está vazio!");
+			throw new Exception("O campo email estï¿½ vazio!");
 		this.email = email;	
 	}
 	

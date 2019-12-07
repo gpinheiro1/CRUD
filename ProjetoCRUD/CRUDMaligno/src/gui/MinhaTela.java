@@ -5,6 +5,10 @@
  */
 package gui;
 
+import daos.MateriasDAO;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Gi
@@ -18,7 +22,9 @@ public class MinhaTela extends javax.swing.JFrame {
      */
     public MinhaTela() {
         initComponents();
-        this.controller = new MinhaTelaController(tabela);
+        this.controller = new MinhaTelaController(tabela, this);
+        DefaultTableModel modelo;
+        MateriasDAO mdao = new MateriasDAO();
     }
 
     /**
@@ -41,6 +47,8 @@ public class MinhaTela extends javax.swing.JFrame {
         txtNomeAluno = new javax.swing.JTextField();
         txtEmailAluno = new javax.swing.JTextField();
         btnCadastrarAluno = new javax.swing.JButton();
+        btnExcluirAluno = new javax.swing.JButton();
+        btnAlterarAluno = new javax.swing.JButton();
         jPanel11 = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
         txtPesquisarCodigo = new javax.swing.JTextField();
@@ -49,21 +57,33 @@ public class MinhaTela extends javax.swing.JFrame {
         txtCodigoMateria = new javax.swing.JTextField();
         txtNomeMateria = new javax.swing.JTextField();
         btnCadastrarMateria = new javax.swing.JButton();
+        btnExcluirMateria = new javax.swing.JButton();
+        btnAlterar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         tabela.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "CODIGO", "NOME", "EMAIL"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tabela.setName("tablePrincipal"); // NOI18N
+        tabela.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabela);
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Aluno"));
@@ -80,6 +100,11 @@ public class MinhaTela extends javax.swing.JFrame {
         });
 
         txtRaPesquisar.setBorder(javax.swing.BorderFactory.createTitledBorder("RA"));
+        txtRaPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtRaPesquisarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -104,8 +129,12 @@ public class MinhaTela extends javax.swing.JFrame {
 
         txtNomeAluno.setBorder(javax.swing.BorderFactory.createTitledBorder("Nome"));
         txtNomeAluno.setName("txtNomeAluno"); // NOI18N
+        txtNomeAluno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNomeAlunoActionPerformed(evt);
+            }
+        });
 
-        txtEmailAluno.setEditable(false);
         txtEmailAluno.setBorder(javax.swing.BorderFactory.createTitledBorder("E-mail"));
         txtEmailAluno.setName("txtEmailAluno"); // NOI18N
 
@@ -114,6 +143,20 @@ public class MinhaTela extends javax.swing.JFrame {
         btnCadastrarAluno.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCadastrarAlunoActionPerformed(evt);
+            }
+        });
+
+        btnExcluirAluno.setText("Excluir");
+        btnExcluirAluno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirAlunoActionPerformed(evt);
+            }
+        });
+
+        btnAlterarAluno.setText("Alterar");
+        btnAlterarAluno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarAlunoActionPerformed(evt);
             }
         });
 
@@ -126,9 +169,14 @@ public class MinhaTela extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtNomeAluno))
             .addComponent(txtEmailAluno)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnCadastrarAluno))
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnCadastrarAluno)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnExcluirAluno, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnAlterarAluno, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,7 +187,10 @@ public class MinhaTela extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtEmailAluno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnCadastrarAluno))
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCadastrarAluno)
+                    .addComponent(btnExcluirAluno)
+                    .addComponent(btnAlterarAluno)))
         );
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -164,6 +215,11 @@ public class MinhaTela extends javax.swing.JFrame {
 
         txtPesquisarCodigo.setBorder(javax.swing.BorderFactory.createTitledBorder("Código"));
         txtPesquisarCodigo.setName("txtPesquisaAluno"); // NOI18N
+        txtPesquisarCodigo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPesquisarCodigoActionPerformed(evt);
+            }
+        });
 
         btnPesquisarMateria.setText("Pesquisar");
         btnPesquisarMateria.setName("btnPesquisarAluno"); // NOI18N
@@ -178,15 +234,17 @@ public class MinhaTela extends javax.swing.JFrame {
         jPanel12Layout.setHorizontalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel12Layout.createSequentialGroup()
-                .addComponent(txtPesquisarCodigo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtPesquisarCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(btnPesquisarMateria))
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(txtPesquisarCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE)
-                .addComponent(btnPesquisarMateria))
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPesquisarCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPesquisarMateria))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         jPanel13.setBorder(javax.swing.BorderFactory.createTitledBorder("Cadastrar"));
@@ -205,6 +263,20 @@ public class MinhaTela extends javax.swing.JFrame {
             }
         });
 
+        btnExcluirMateria.setText("Excluir");
+        btnExcluirMateria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirMateriaActionPerformed(evt);
+            }
+        });
+
+        btnAlterar.setText("Alterar");
+        btnAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
         jPanel13Layout.setHorizontalGroup(
@@ -212,10 +284,15 @@ public class MinhaTela extends javax.swing.JFrame {
             .addGroup(jPanel13Layout.createSequentialGroup()
                 .addComponent(txtCodigoMateria, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtNomeMateria, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnCadastrarMateria))
+                .addComponent(txtNomeMateria))
+            .addGroup(jPanel13Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnCadastrarMateria)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnExcluirMateria, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -223,24 +300,27 @@ public class MinhaTela extends javax.swing.JFrame {
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCodigoMateria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtNomeMateria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCadastrarMateria))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCadastrarMateria)
+                    .addComponent(btnExcluirMateria)
+                    .addComponent(btnAlterar)))
         );
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
         jPanel11Layout.setHorizontalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
                 .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -253,45 +333,142 @@ public class MinhaTela extends javax.swing.JFrame {
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCadastrarMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarMateriaActionPerformed
-        String codigo = txtCodigoMateria.getText();
-        String nome = txtNomeMateria.getText();
-        
-        controller.salvarMateria(codigo, nome);
+          String codigo = txtCodigoMateria.getText();
+          String nome = txtNomeMateria.getText();
+          
+          DefaultTableModel dtm = (DefaultTableModel) tabela.getModel();
+          Object[] dados = {codigo, nome};
+          dtm.addRow(dados);
+          
+          controller.salvarMateria(codigo, nome);
+          txtCodigoMateria.setText("");
+          txtNomeMateria.setText("");
     }//GEN-LAST:event_btnCadastrarMateriaActionPerformed
 
     private void btnPesquisarMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarMateriaActionPerformed
         String codigo = txtPesquisarCodigo.getText();
         
+        DefaultTableModel dtm = (DefaultTableModel) tabela.getModel();
+          Object[] dados = {codigo};
+          dtm.addRow(dados);
+        
         controller.pesquisarMateria(codigo);
     }//GEN-LAST:event_btnPesquisarMateriaActionPerformed
 
     private void btnCadastrarAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarAlunoActionPerformed
-        // TODO add your handling code here:
+       String ra = txtRaAluno.getText();
+       String nome = txtNomeAluno.getText();
+       String email = txtEmailAluno.getText();
+       
+       DefaultTableModel dtm = (DefaultTableModel) tabela.getModel();
+          Object[] dados = {ra, nome, email};
+          dtm.addRow(dados);
+       
+       controller.salvarAluno(ra, nome, email);
+       txtRaAluno.setText("");
+       txtNomeAluno.setText("");
+       txtEmailAluno.setText("");
+          
     }//GEN-LAST:event_btnCadastrarAlunoActionPerformed
 
     private void btnPesquisarAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarAlunoActionPerformed
-        // TODO add your handling code here:
+        String ra = txtRaPesquisar.getText();
+        
+        controller.pesquisarAluno(ra);
     }//GEN-LAST:event_btnPesquisarAlunoActionPerformed
+
+    private void txtNomeAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeAlunoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNomeAlunoActionPerformed
+
+    private void txtRaPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRaPesquisarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtRaPesquisarActionPerformed
+
+    private void txtPesquisarCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPesquisarCodigoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPesquisarCodigoActionPerformed
+
+    private void btnExcluirMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirMateriaActionPerformed
+        String codigo = txtCodigoMateria.getText();
+        try{
+            if(tabela.getSelectedRow() != -1){
+            
+            DefaultTableModel dtm = (DefaultTableModel) tabela.getModel();
+            dtm.removeRow(tabela.getSelectedRow());
+            controller.excluirMateria(codigo);
+        }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Selecione uma linha para exclusão");
+        }
+    
+    }//GEN-LAST:event_btnExcluirMateriaActionPerformed
+
+    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+        String codigo = txtCodigoMateria.getText();
+        String nome = txtNomeMateria.getText();
+        
+        if(tabela.getSelectedRow() != -1){
+            
+            tabela.setValueAt(codigo, tabela.getSelectedRow(), 0);
+            tabela.setValueAt(nome, tabela.getSelectedRow(), 1);
+            controller.alterarMateria(codigo, nome);
+        }
+    }//GEN-LAST:event_btnAlterarActionPerformed
+
+    private void tabelaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaMouseClicked
+        if(tabela.getSelectedRow() != -1){
+            txtCodigoMateria.setText(tabela.getValueAt(tabela.getSelectedRow(), 0).toString());
+            txtNomeMateria.setText(tabela.getValueAt(tabela.getSelectedRow(), 1).toString());
+        }
+    }//GEN-LAST:event_tabelaMouseClicked
+
+    private void btnAlterarAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarAlunoActionPerformed
+        String ra = txtRaAluno.getText();
+        String nome = txtNomeAluno.getText();
+        String email = txtEmailAluno.getText();
+        
+        if(tabela.getSelectedRow() != -1){
+            
+            tabela.setValueAt(ra, tabela.getSelectedRow(), 0);
+            tabela.setValueAt(nome, tabela.getSelectedRow(), 1);
+            tabela.setValueAt(email, tabela.getSelectedRow(), 2);
+            controller.alterarAluno(ra, nome, email);
+    }//GEN-LAST:event_btnAlterarAlunoActionPerformed
+
+    private void btnExcluirAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirAlunoActionPerformed
+         String ra = txtRaAluno.getText();
+        try{
+            if(tabela.getSelectedRow() != -1){
+            
+            DefaultTableModel dtm = (DefaultTableModel) tabela.getModel();
+            dtm.removeRow(tabela.getSelectedRow());
+            controller.excluirAluno(ra);
+        }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Selecione uma linha para exclusão");
+        }
+    }//GEN-LAST:event_btnExcluirAlunoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -329,8 +506,12 @@ public class MinhaTela extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAlterar;
+    private javax.swing.JButton btnAlterarAluno;
     private javax.swing.JButton btnCadastrarAluno;
     private javax.swing.JButton btnCadastrarMateria;
+    private javax.swing.JButton btnExcluirAluno;
+    private javax.swing.JButton btnExcluirMateria;
     private javax.swing.JButton btnPesquisarAluno;
     private javax.swing.JButton btnPesquisarMateria;
     private javax.swing.JPanel jPanel1;

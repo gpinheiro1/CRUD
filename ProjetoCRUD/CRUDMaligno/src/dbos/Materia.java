@@ -10,6 +10,10 @@ public class Materia {
 		this.setCodMateria(codMateria);
 		this.setNomeMateria(nomeMateria);
 	}
+        public Materia(){
+            this.codMateria = null;
+            this.nomeMateria = null;
+        }
 	
 	public String getCodMateria() {
 		return this.codMateria;
@@ -30,8 +34,8 @@ public class Materia {
 	public String toString() {
 		String ret = "";
 		
-		ret += "Código da Matéria: " + this.codMateria + "\n";
-		ret += "Nome da Matéria" + this.nomeMateria;
+		ret += "Cï¿½digo da Matï¿½ria: " + this.codMateria + "\n";
+		ret += "Nome da Matï¿½ria" + this.nomeMateria;
 		
 		return ret;
 	}
