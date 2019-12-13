@@ -5,7 +5,11 @@
  */
 package gui;
 
+import daos.AlunosDAO;
 import daos.MateriasDAO;
+import dbos.Aluno;
+import dbos.Materia;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -15,16 +19,16 @@ import javax.swing.table.DefaultTableModel;
  */
 public class MinhaTela extends javax.swing.JFrame {
 
-    MinhaTelaController controller;
-    
+    AlunosDAO alunosDAO;
+    MateriasDAO materiasDAO;
+
     /**
      * Creates new form MinhaTela
      */
     public MinhaTela() {
         initComponents();
-        this.controller = new MinhaTelaController(tabela, this);
-        DefaultTableModel modelo;
-        MateriasDAO mdao = new MateriasDAO();
+        materiasDAO = new MateriasDAO();
+        alunosDAO = new AlunosDAO();
     }
 
     /**
@@ -38,10 +42,11 @@ public class MinhaTela extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         tabela = new javax.swing.JTable();
+        btnExibirTudo = new javax.swing.JButton();
+        btnFrequencia0 = new javax.swing.JButton();
+        btnNomesOrdenadosPorMedias = new javax.swing.JButton();
+        abas = new javax.swing.JTabbedPane();
         jPanel5 = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        btnPesquisarAluno = new javax.swing.JButton();
-        txtRaPesquisar = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
         txtRaAluno = new javax.swing.JTextField();
         txtNomeAluno = new javax.swing.JTextField();
@@ -49,7 +54,11 @@ public class MinhaTela extends javax.swing.JFrame {
         btnCadastrarAluno = new javax.swing.JButton();
         btnExcluirAluno = new javax.swing.JButton();
         btnAlterarAluno = new javax.swing.JButton();
-        jPanel11 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        btnPesquisarAluno = new javax.swing.JButton();
+        txtRaPesquisar = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
+        AbaMaterias = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
         txtPesquisarCodigo = new javax.swing.JTextField();
         btnPesquisarMateria = new javax.swing.JButton();
@@ -58,7 +67,22 @@ public class MinhaTela extends javax.swing.JFrame {
         txtNomeMateria = new javax.swing.JTextField();
         btnCadastrarMateria = new javax.swing.JButton();
         btnExcluirMateria = new javax.swing.JButton();
-        btnAlterar = new javax.swing.JButton();
+        btnAlterarMateria = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        AbaFez = new javax.swing.JPanel();
+        jPanel15 = new javax.swing.JPanel();
+        txtFezCodMateria = new javax.swing.JTextField();
+        txtFezFrequencia = new javax.swing.JTextField();
+        txtFezNomeMateria = new javax.swing.JTextField();
+        txtFezNota = new javax.swing.JTextField();
+        btnCadastrarFez = new javax.swing.JButton();
+        btnExcluirFez = new javax.swing.JButton();
+        btnAlterarFez = new javax.swing.JButton();
+        jPanel14 = new javax.swing.JPanel();
+        txtFezPesquisarCod = new javax.swing.JTextField();
+        btnPesquisarFez = new javax.swing.JButton();
+        btnMateriasSemReprovacao = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,6 +103,7 @@ public class MinhaTela extends javax.swing.JFrame {
             }
         });
         tabela.setName("tablePrincipal"); // NOI18N
+        tabela.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tabela.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabelaMouseClicked(evt);
@@ -86,41 +111,19 @@ public class MinhaTela extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tabela);
 
+        btnExibirTudo.setText("Exibir tudo");
+        btnExibirTudo.setActionCommand("btnExibirTudo");
+        btnExibirTudo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExibirTudoActionPerformed(evt);
+            }
+        });
+
+        btnFrequencia0.setText("Frequência 0%");
+
+        btnNomesOrdenadosPorMedias.setText("Nomes Ordenados por Médias");
+
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Aluno"));
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Pesquisar"));
-        jPanel1.setName("txtPesquisarAluno"); // NOI18N
-
-        btnPesquisarAluno.setText("Pesquisar");
-        btnPesquisarAluno.setName("btnPesquisarAluno"); // NOI18N
-        btnPesquisarAluno.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPesquisarAlunoActionPerformed(evt);
-            }
-        });
-
-        txtRaPesquisar.setBorder(javax.swing.BorderFactory.createTitledBorder("RA"));
-        txtRaPesquisar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtRaPesquisarActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(txtRaPesquisar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnPesquisarAluno))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(btnPesquisarAluno)
-                .addComponent(txtRaPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Cadastrar"));
 
@@ -137,6 +140,11 @@ public class MinhaTela extends javax.swing.JFrame {
 
         txtEmailAluno.setBorder(javax.swing.BorderFactory.createTitledBorder("E-mail"));
         txtEmailAluno.setName("txtEmailAluno"); // NOI18N
+        txtEmailAluno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEmailAlunoActionPerformed(evt);
+            }
+        });
 
         btnCadastrarAluno.setText("Cadastrar");
         btnCadastrarAluno.setName("btnCadastrarAluno"); // NOI18N
@@ -176,7 +184,7 @@ public class MinhaTela extends javax.swing.JFrame {
                 .addComponent(btnExcluirAluno, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnAlterarAluno, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(130, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -193,12 +201,49 @@ public class MinhaTela extends javax.swing.JFrame {
                     .addComponent(btnAlterarAluno)))
         );
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Pesquisar"));
+        jPanel1.setName("txtPesquisarAluno"); // NOI18N
+
+        btnPesquisarAluno.setText("Pesquisar");
+        btnPesquisarAluno.setName("btnPesquisarAluno"); // NOI18N
+        btnPesquisarAluno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPesquisarAlunoActionPerformed(evt);
+            }
+        });
+
+        txtRaPesquisar.setBorder(javax.swing.BorderFactory.createTitledBorder("RA"));
+        txtRaPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtRaPesquisarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(txtRaPesquisar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnPesquisarAluno))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(btnPesquisarAluno)
+                .addComponent(txtRaPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -206,14 +251,16 @@ public class MinhaTela extends javax.swing.JFrame {
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(16, 16, 16))
         );
 
-        jPanel11.setBorder(javax.swing.BorderFactory.createTitledBorder("Materia"));
+        abas.addTab("Alunos", jPanel5);
+
+        AbaMaterias.setBorder(javax.swing.BorderFactory.createTitledBorder("Materia"));
 
         jPanel12.setBorder(javax.swing.BorderFactory.createTitledBorder("Pesquisar"));
 
-        txtPesquisarCodigo.setBorder(javax.swing.BorderFactory.createTitledBorder("Código"));
+        txtPesquisarCodigo.setBorder(javax.swing.BorderFactory.createTitledBorder("Código da Matéria"));
         txtPesquisarCodigo.setName("txtPesquisaAluno"); // NOI18N
         txtPesquisarCodigo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -240,11 +287,9 @@ public class MinhaTela extends javax.swing.JFrame {
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel12Layout.createSequentialGroup()
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPesquisarCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnPesquisarMateria))
-                .addContainerGap(34, Short.MAX_VALUE))
+            .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(txtPesquisarCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnPesquisarMateria))
         );
 
         jPanel13.setBorder(javax.swing.BorderFactory.createTitledBorder("Cadastrar"));
@@ -252,8 +297,13 @@ public class MinhaTela extends javax.swing.JFrame {
         txtCodigoMateria.setBorder(javax.swing.BorderFactory.createTitledBorder("Código"));
         txtCodigoMateria.setName("txtCodigoMateria"); // NOI18N
 
-        txtNomeMateria.setBorder(javax.swing.BorderFactory.createTitledBorder("Nome"));
+        txtNomeMateria.setBorder(javax.swing.BorderFactory.createTitledBorder("Matéria"));
         txtNomeMateria.setName("txtNomeMateria"); // NOI18N
+        txtNomeMateria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNomeMateriaActionPerformed(evt);
+            }
+        });
 
         btnCadastrarMateria.setText("Cadastrar");
         btnCadastrarMateria.setName("btnCadastrarMateria"); // NOI18N
@@ -270,10 +320,10 @@ public class MinhaTela extends javax.swing.JFrame {
             }
         });
 
-        btnAlterar.setText("Alterar");
-        btnAlterar.addActionListener(new java.awt.event.ActionListener() {
+        btnAlterarMateria.setText("Alterar");
+        btnAlterarMateria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAlterarActionPerformed(evt);
+                btnAlterarMateriaActionPerformed(evt);
             }
         });
 
@@ -286,13 +336,12 @@ public class MinhaTela extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtNomeMateria))
             .addGroup(jPanel13Layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(btnCadastrarMateria)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnExcluirMateria, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnExcluirMateria, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btnAlterarMateria, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -300,147 +349,285 @@ public class MinhaTela extends javax.swing.JFrame {
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCodigoMateria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtNomeMateria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCadastrarMateria)
                     .addComponent(btnExcluirMateria)
-                    .addComponent(btnAlterar)))
+                    .addComponent(btnAlterarMateria))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11.setLayout(jPanel11Layout);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout AbaMateriasLayout = new javax.swing.GroupLayout(AbaMaterias);
+        AbaMaterias.setLayout(AbaMateriasLayout);
+        AbaMateriasLayout.setHorizontalGroup(
+            AbaMateriasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
+        AbaMateriasLayout.setVerticalGroup(
+            AbaMateriasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AbaMateriasLayout.createSequentialGroup()
                 .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(221, Short.MAX_VALUE))
         );
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(AbaMaterias, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(AbaMaterias, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        abas.addTab("Materias", jPanel2);
+
+        AbaFez.setBorder(javax.swing.BorderFactory.createTitledBorder("Fez"));
+
+        jPanel15.setBorder(javax.swing.BorderFactory.createTitledBorder("Cadastrar"));
+
+        txtFezCodMateria.setBorder(javax.swing.BorderFactory.createTitledBorder("Código da Matéria"));
+        txtFezCodMateria.setName("txtCodigoMateria"); // NOI18N
+
+        txtFezFrequencia.setBorder(javax.swing.BorderFactory.createTitledBorder("Frequência"));
+        txtFezFrequencia.setName("txtNomeMateria"); // NOI18N
+        txtFezFrequencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFezFrequenciaActionPerformed(evt);
+            }
+        });
+
+        txtFezNomeMateria.setBorder(javax.swing.BorderFactory.createTitledBorder("Matéria"));
+        txtFezNomeMateria.setName("txtNomeMateria"); // NOI18N
+        txtFezNomeMateria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFezNomeMateriaActionPerformed(evt);
+            }
+        });
+
+        txtFezNota.setBorder(javax.swing.BorderFactory.createTitledBorder("Nota"));
+        txtFezNota.setName("txtNomeMateria"); // NOI18N
+        txtFezNota.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFezNotaActionPerformed(evt);
+            }
+        });
+
+        btnCadastrarFez.setText("Cadastrar");
+        btnCadastrarFez.setName("btnCadastrarMateria"); // NOI18N
+        btnCadastrarFez.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCadastrarFezActionPerformed(evt);
+            }
+        });
+
+        btnExcluirFez.setText("Excluir");
+        btnExcluirFez.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirFezActionPerformed(evt);
+            }
+        });
+
+        btnAlterarFez.setText("Alterar");
+        btnAlterarFez.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarFezActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
+        jPanel15.setLayout(jPanel15Layout);
+        jPanel15Layout.setHorizontalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(txtFezCodMateria, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtFezNota, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtFezNomeMateria, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtFezFrequencia)
+                    .addGroup(jPanel15Layout.createSequentialGroup()
+                        .addComponent(btnCadastrarFez)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnExcluirFez, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnAlterarFez, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel15Layout.setVerticalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtFezCodMateria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtFezNota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtFezNomeMateria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtFezFrequencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCadastrarFez)
+                    .addComponent(btnExcluirFez)
+                    .addComponent(btnAlterarFez))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout AbaFezLayout = new javax.swing.GroupLayout(AbaFez);
+        AbaFez.setLayout(AbaFezLayout);
+        AbaFezLayout.setHorizontalGroup(
+            AbaFezLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        AbaFezLayout.setVerticalGroup(
+            AbaFezLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        jPanel14.setBorder(javax.swing.BorderFactory.createTitledBorder("Pesquisar"));
+
+        txtFezPesquisarCod.setBorder(javax.swing.BorderFactory.createTitledBorder("Código da Matéria"));
+        txtFezPesquisarCod.setName("txtPesquisaAluno"); // NOI18N
+        txtFezPesquisarCod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFezPesquisarCodActionPerformed(evt);
+            }
+        });
+
+        btnPesquisarFez.setText("Pesquisar");
+        btnPesquisarFez.setName("btnPesquisarAluno"); // NOI18N
+        btnPesquisarFez.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPesquisarFezActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
+        jPanel14.setLayout(jPanel14Layout);
+        jPanel14Layout.setHorizontalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel14Layout.createSequentialGroup()
+                .addComponent(txtFezPesquisarCod, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnPesquisarFez)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel14Layout.setVerticalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel14Layout.createSequentialGroup()
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtFezPesquisarCod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPesquisarFez))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(AbaFez, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(AbaFez, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 120, Short.MAX_VALUE))
+        );
+
+        AbaFez.getAccessibleContext().setAccessibleName("Fez");
+
+        abas.addTab("Fez", jPanel3);
+
+        btnMateriasSemReprovacao.setText("Materias Sem Reprovação");
+        btnMateriasSemReprovacao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMateriasSemReprovacaoActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("Materias Ordenadas Por Médias");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(6, 6, 6)
+                .addComponent(abas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnExibirTudo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnFrequencia0)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnNomesOrdenadosPorMedias)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnMateriasSemReprovacao)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton5))
+                    .addComponent(jScrollPane1))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(42, Short.MAX_VALUE))
+                        .addComponent(abas)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnExibirTudo)
+                            .addComponent(btnFrequencia0)
+                            .addComponent(btnNomesOrdenadosPorMedias)
+                            .addComponent(btnMateriasSemReprovacao)
+                            .addComponent(jButton5))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCadastrarMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarMateriaActionPerformed
-          String codigo = txtCodigoMateria.getText();
-          String nome = txtNomeMateria.getText();
-          
-          DefaultTableModel dtm = (DefaultTableModel) tabela.getModel();
-          Object[] dados = {codigo, nome};
-          dtm.addRow(dados);
-          
-          controller.salvarMateria(codigo, nome);
-          txtCodigoMateria.setText("");
-          txtNomeMateria.setText("");
-    }//GEN-LAST:event_btnCadastrarMateriaActionPerformed
-
-    private void btnPesquisarMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarMateriaActionPerformed
-        String codigo = txtPesquisarCodigo.getText();
-        
-        DefaultTableModel dtm = (DefaultTableModel) tabela.getModel();
-          Object[] dados = {codigo};
-          dtm.addRow(dados);
-        
-        controller.pesquisarMateria(codigo);
-    }//GEN-LAST:event_btnPesquisarMateriaActionPerformed
-
-    private void btnCadastrarAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarAlunoActionPerformed
-       String ra = txtRaAluno.getText();
-       String nome = txtNomeAluno.getText();
-       String email = txtEmailAluno.getText();
-       
-       DefaultTableModel dtm = (DefaultTableModel) tabela.getModel();
-          Object[] dados = {ra, nome, email};
-          dtm.addRow(dados);
-       
-       controller.salvarAluno(ra, nome, email);
-       txtRaAluno.setText("");
-       txtNomeAluno.setText("");
-       txtEmailAluno.setText("");
-          
-    }//GEN-LAST:event_btnCadastrarAlunoActionPerformed
-
     private void btnPesquisarAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarAlunoActionPerformed
         String ra = txtRaPesquisar.getText();
-        
-        controller.pesquisarAluno(ra);
-    }//GEN-LAST:event_btnPesquisarAlunoActionPerformed
 
-    private void txtNomeAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeAlunoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtNomeAlunoActionPerformed
+        if (ra == null || ra.length() != 5 || verificaSeTemLetra(ra)) {
+            JOptionPane.showMessageDialog(null, "Digite um RA válido");
+            return;
+        }
+
+        try {
+            List<Aluno> lista = alunosDAO.read(ra);
+            exibirAlunos(lista);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao pesquisar aluno");
+        }
+    }//GEN-LAST:event_btnPesquisarAlunoActionPerformed
 
     private void txtRaPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRaPesquisarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtRaPesquisarActionPerformed
 
-    private void txtPesquisarCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPesquisarCodigoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtPesquisarCodigoActionPerformed
-
-    private void btnExcluirMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirMateriaActionPerformed
-        String codigo = txtCodigoMateria.getText();
-        try{
-            if(tabela.getSelectedRow() != -1){
-            
-            DefaultTableModel dtm = (DefaultTableModel) tabela.getModel();
-            dtm.removeRow(tabela.getSelectedRow());
-            controller.excluirMateria(codigo);
-        }
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Selecione uma linha para exclusão");
-        }
-    
-    }//GEN-LAST:event_btnExcluirMateriaActionPerformed
-
-    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        String codigo = txtCodigoMateria.getText();
-        String nome = txtNomeMateria.getText();
-        
-        if(tabela.getSelectedRow() != -1){
-            
-            tabela.setValueAt(codigo, tabela.getSelectedRow(), 0);
-            tabela.setValueAt(nome, tabela.getSelectedRow(), 1);
-            controller.alterarMateria(codigo, nome);
-        }
-    }//GEN-LAST:event_btnAlterarActionPerformed
-
     private void tabelaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaMouseClicked
-        if(tabela.getSelectedRow() != -1){
-            txtCodigoMateria.setText(tabela.getValueAt(tabela.getSelectedRow(), 0).toString());
-            txtNomeMateria.setText(tabela.getValueAt(tabela.getSelectedRow(), 1).toString());
-        }
+
     }//GEN-LAST:event_tabelaMouseClicked
 
     private void btnAlterarAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarAlunoActionPerformed
@@ -448,27 +635,195 @@ public class MinhaTela extends javax.swing.JFrame {
         String nome = txtNomeAluno.getText();
         String email = txtEmailAluno.getText();
         
-        if(tabela.getSelectedRow() != -1){
-            
-            tabela.setValueAt(ra, tabela.getSelectedRow(), 0);
-            tabela.setValueAt(nome, tabela.getSelectedRow(), 1);
-            tabela.setValueAt(email, tabela.getSelectedRow(), 2);
-            controller.alterarAluno(ra, nome, email);
+        if (ra.length() != 5) {
+            JOptionPane.showMessageDialog(null, "RA inválido");
+            return;
+        }
+        
+        if (nome.length() == 0 && email.length() == 0) {
+            JOptionPane.showMessageDialog(null, "Digite um e-mail ou nome para ser atualizado");
+            return;
+        }
+
+        try {
+            if (nome.length() > 0 && email.length() == 0)
+                alunosDAO.updateNome(ra, nome);
+            else if (email.length() > 0 && nome.length() == 0)
+                alunosDAO.updateEmail(ra, nome);
+            else
+                alunosDAO.update(new Aluno(ra, nome, email));
+            exibirAlunos(alunosDAO.readAll());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar aluno");
+        }
     }//GEN-LAST:event_btnAlterarAlunoActionPerformed
 
     private void btnExcluirAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirAlunoActionPerformed
-         String ra = txtRaAluno.getText();
-        try{
-            if(tabela.getSelectedRow() != -1){
-            
-            DefaultTableModel dtm = (DefaultTableModel) tabela.getModel();
-            dtm.removeRow(tabela.getSelectedRow());
-            controller.excluirAluno(ra);
-        }
-        }catch(Exception e){
+
+        try {
+            if (tabela.getSelectedRow() != -1) {
+                DefaultTableModel dtm = (DefaultTableModel) tabela.getModel();
+                String ra = (String) dtm.getValueAt(tabela.getSelectedRow(), 0);
+                alunosDAO.delete(ra);
+                JOptionPane.showMessageDialog(null, "Usuário deletado com sucesso");
+                exibirAlunos(alunosDAO.readAll());
+            }
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Selecione uma linha para exclusão");
         }
     }//GEN-LAST:event_btnExcluirAlunoActionPerformed
+
+    private void btnCadastrarAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarAlunoActionPerformed
+        String ra = txtRaAluno.getText();
+        String nome = txtNomeAluno.getText();
+        String email = txtEmailAluno.getText();
+
+        try {
+            alunosDAO.create(new Aluno(ra, nome, email));
+            txtRaAluno.setText("");
+            txtNomeAluno.setText("");
+            txtEmailAluno.setText("");
+            JOptionPane.showMessageDialog(null, "Usuário cadastrado com sucesso");
+            exibirAlunos(alunosDAO.readAll());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao cadastrar aluno");
+        }
+    }//GEN-LAST:event_btnCadastrarAlunoActionPerformed
+
+    private void txtNomeAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeAlunoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNomeAlunoActionPerformed
+
+    private void btnAlterarMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarMateriaActionPerformed
+        String codigo = txtCodigoMateria.getText();
+        String materia = txtNomeMateria.getText();
+        
+        if (codigo.length() != 5) {
+            JOptionPane.showMessageDialog(null, "Código da matéria inválido");
+            return;
+        }
+        
+        if (materia.length() == 0) {
+            JOptionPane.showMessageDialog(null, "Digite o nome da matéria a ser atualizada");
+            return;
+        }
+
+        try {
+                materiasDAO.update(new Materia(codigo, materia));
+                exibirMaterias(materiasDAO.readAll());
+                JOptionPane.showMessageDialog(null, "Matéria atualizada com sucesso");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar matéria");
+        }
+    }//GEN-LAST:event_btnAlterarMateriaActionPerformed
+
+    private void btnExcluirMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirMateriaActionPerformed
+         try {
+            if (tabela.getSelectedRow() != -1) {
+                DefaultTableModel dtm = (DefaultTableModel) tabela.getModel();
+                String codigo = (String) dtm.getValueAt(tabela.getSelectedRow(), 0);
+                materiasDAO.delete(codigo);
+                JOptionPane.showMessageDialog(null, "Matéria deletada com sucesso");
+                exibirMaterias(materiasDAO.readAll());
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Selecione uma linha para exclusão");
+        }
+    }//GEN-LAST:event_btnExcluirMateriaActionPerformed
+
+    private void btnCadastrarMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarMateriaActionPerformed
+        String codigo = txtCodigoMateria.getText();
+        String materia = txtNomeMateria.getText();
+
+        try {
+            materiasDAO.create(new Materia(codigo, materia));
+            txtCodigoMateria.setText("");
+            txtNomeMateria.setText("");
+            JOptionPane.showMessageDialog(null, "Matéria cadastrada com sucesso");
+            exibirMaterias(materiasDAO.readAll());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao cadastrar matéria");
+        }
+    }//GEN-LAST:event_btnCadastrarMateriaActionPerformed
+
+    private void txtNomeMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeMateriaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNomeMateriaActionPerformed
+
+    private void btnPesquisarMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarMateriaActionPerformed
+        String codigo = txtPesquisarCodigo.getText();
+
+        try {
+            exibirMaterias(materiasDAO.read(codigo));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao procurar materia");
+        }
+    }//GEN-LAST:event_btnPesquisarMateriaActionPerformed
+
+    private void txtPesquisarCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPesquisarCodigoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPesquisarCodigoActionPerformed
+
+    private void btnMateriasSemReprovacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMateriasSemReprovacaoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnMateriasSemReprovacaoActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void txtFezPesquisarCodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFezPesquisarCodActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFezPesquisarCodActionPerformed
+
+    private void btnPesquisarFezActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarFezActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPesquisarFezActionPerformed
+
+    private void txtFezNomeMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFezNomeMateriaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFezNomeMateriaActionPerformed
+
+    private void btnCadastrarFezActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarFezActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCadastrarFezActionPerformed
+
+    private void btnExcluirFezActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirFezActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnExcluirFezActionPerformed
+
+    private void btnAlterarFezActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarFezActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAlterarFezActionPerformed
+
+    private void txtFezFrequenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFezFrequenciaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFezFrequenciaActionPerformed
+
+    private void txtFezNotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFezNotaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFezNotaActionPerformed
+
+    private void btnExibirTudoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExibirTudoActionPerformed
+        try {
+            int abaSelecionada = abas.getSelectedIndex();
+            switch (abaSelecionada) {
+                case 0:
+                    exibirAlunos(alunosDAO.readAll());
+                    break;
+                case 1:
+                    exibirMaterias(materiasDAO.readAll());
+                    break;
+                //case 3: exibirFez(fezDAO.realAll());
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao exibir");
+        }
+    }//GEN-LAST:event_btnExibirTudoActionPerformed
+
+    private void txtEmailAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailAlunoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEmailAlunoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -484,16 +839,24 @@ public class MinhaTela extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MinhaTela.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MinhaTela.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MinhaTela.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MinhaTela.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MinhaTela.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MinhaTela.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MinhaTela.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MinhaTela.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -505,25 +868,81 @@ public class MinhaTela extends javax.swing.JFrame {
         });
     }
 
+    public void exibirAlunos(List<Aluno> lista) {
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnCount(3);
+        model.setColumnIdentifiers(new String[]{"RA", "Nome", "E-mail"});
+
+        lista.forEach((aluno) -> {
+            model.addRow(new String[]{
+                aluno.getRa(),
+                aluno.getNome(),
+                aluno.getEmail()
+            });
+        });
+        tabela.setModel(model);
+    }
+
+    public void exibirMaterias(List<Materia> lista) {
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnCount(2);
+        model.setColumnIdentifiers(new String[]{"Código", "Nome"});
+
+        lista.forEach((materia) -> {
+            model.addRow(new String[]{
+                materia.getCodMateria(),
+                materia.getNomeMateria(),});
+        });
+        tabela.setModel(model);
+    }
+
+    private boolean verificaSeTemLetra(String string) {
+        return string.matches("[a-zA-Z]+");
+    }
+
+    private boolean verificaSeTemNumero(String string) {
+        return string.matches("[0-9]+");
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAlterar;
+    private javax.swing.JPanel AbaFez;
+    private javax.swing.JPanel AbaMaterias;
+    private javax.swing.JTabbedPane abas;
     private javax.swing.JButton btnAlterarAluno;
+    private javax.swing.JButton btnAlterarFez;
+    private javax.swing.JButton btnAlterarMateria;
     private javax.swing.JButton btnCadastrarAluno;
+    private javax.swing.JButton btnCadastrarFez;
     private javax.swing.JButton btnCadastrarMateria;
     private javax.swing.JButton btnExcluirAluno;
+    private javax.swing.JButton btnExcluirFez;
     private javax.swing.JButton btnExcluirMateria;
+    private javax.swing.JButton btnExibirTudo;
+    private javax.swing.JButton btnFrequencia0;
+    private javax.swing.JButton btnMateriasSemReprovacao;
+    private javax.swing.JButton btnNomesOrdenadosPorMedias;
     private javax.swing.JButton btnPesquisarAluno;
+    private javax.swing.JButton btnPesquisarFez;
     private javax.swing.JButton btnPesquisarMateria;
+    private javax.swing.JButton jButton5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
+    private javax.swing.JPanel jPanel14;
+    private javax.swing.JPanel jPanel15;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tabela;
     private javax.swing.JTextField txtCodigoMateria;
     private javax.swing.JTextField txtEmailAluno;
+    private javax.swing.JTextField txtFezCodMateria;
+    private javax.swing.JTextField txtFezFrequencia;
+    private javax.swing.JTextField txtFezNomeMateria;
+    private javax.swing.JTextField txtFezNota;
+    private javax.swing.JTextField txtFezPesquisarCod;
     private javax.swing.JTextField txtNomeAluno;
     private javax.swing.JTextField txtNomeMateria;
     private javax.swing.JTextField txtPesquisarCodigo;

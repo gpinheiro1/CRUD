@@ -73,3 +73,6 @@ group by
 	a.nome
 order by
 	avg(f.nota);
+
+
+SELECT * FROM Aluno WHERE ra = '19385'

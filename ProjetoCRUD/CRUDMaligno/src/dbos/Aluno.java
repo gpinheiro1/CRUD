@@ -14,7 +14,9 @@ public class Aluno implements Cloneable {
 	}
 
     public Aluno() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            this.ra = null;
+            this.nome = null;
+            this.email = null;
     }
 	
 	public String getRa() {
