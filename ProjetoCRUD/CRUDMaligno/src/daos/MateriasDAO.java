@@ -96,33 +96,32 @@ public class MateriasDAO implements CrudInterface<Materia, String> {
 	}
         
         //METODO RELATORIO
-        public static List<Materia> nomeMateriasSemReprovacao() throws Exception{
-            List<Materia> listaMaterias = new ArrayList<>();
+        public static List<String> nomeMateriasSemReprovacao() throws Exception{
+            List<String> listaMaterias = new ArrayList<>();
             String sql = "nomeMateriasSemReprovacao_sp";
             BDSQLServer.COMANDO.prepareStatement(sql);
-            BDSQLServer.COMANDO.executeUpdate();
             MeuResultSet rs = (MeuResultSet) BDSQLServer.COMANDO.executeQuery();
             while(rs.next()){
-                Materia mat = new Materia();
-                mat.setCodMateria("codMateria");
-                mat.setNomeMateria("nomeMateria");
-                listaMaterias.add(mat);
+                listaMaterias.add(
+                        rs.getString("nomeMateria")
+                );
             }
             return listaMaterias;
         }
         
         //METODO RELATORIO
-        public static List<Materia> nomeMateriasOrdenadasporMediasAlunos() throws Exception{
-             List<Materia> listaMaterias = new ArrayList<>();
+        public static List<String[]> nomeMateriasOrdenadasporMediasAlunos() throws Exception{
+            List<String[]> listaMaterias = new ArrayList<>();
             String sql = "nomeMateriasPorMediaAlunos_sp";
             BDSQLServer.COMANDO.prepareStatement(sql);
-            BDSQLServer.COMANDO.executeUpdate();
             MeuResultSet rs = (MeuResultSet) BDSQLServer.COMANDO.executeQuery();
             while(rs.next()){
-                Materia mat = new Materia();
-                mat.setCodMateria("codMateria");
-                mat.setNomeMateria("nomeMateria");
-                listaMaterias.add(mat);
+                listaMaterias.add(
+                    new String[] {
+                        rs.getString("nomeMateria"),
+                        Float.toString(rs.getFloat("media"))
+                    }
+                );
             }
             return listaMaterias;
         }

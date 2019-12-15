@@ -11,6 +11,7 @@ import daos.MateriasDAO;
 import dbos.Aluno;
 import dbos.Fez;
 import dbos.Materia;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -131,6 +132,11 @@ public class MinhaTela extends javax.swing.JFrame {
         });
 
         btnNomesOrdenadosPorMedias.setText("Alunos Ordenados por Médias");
+        btnNomesOrdenadosPorMedias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNomesOrdenadosPorMediasActionPerformed(evt);
+            }
+        });
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Aluno"));
 
@@ -726,7 +732,7 @@ public class MinhaTela extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAlterarMateriaActionPerformed
 
     private void btnExcluirMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirMateriaActionPerformed
-         try {
+        try {
             if (tabela.getSelectedRow() != -1) {
                 DefaultTableModel dtm = (DefaultTableModel) tabela.getModel();
                 String codigo = (String) dtm.getValueAt(tabela.getSelectedRow(), 0);
@@ -773,11 +779,29 @@ public class MinhaTela extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPesquisarCodigoActionPerformed
 
     private void btnMateriasSemReprovacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMateriasSemReprovacaoActionPerformed
-        // TODO add your handling code here:
+        try {
+            List<String[]> lista = new ArrayList<>();
+            List<String> resposta = MateriasDAO.nomeMateriasSemReprovacao();
+            for (int i = 0; i < resposta.size(); i++)
+                lista.add(new String[] { resposta.get(i) });
+            
+            String[] colunas = new String[] {"Nome"};
+            
+            exibirLista(colunas, lista);
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(this, "Erro: " + erro.getMessage());
+        }
     }//GEN-LAST:event_btnMateriasSemReprovacaoActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        try {
+            exibirLista(
+                new String[] { "Nome", "Media"},
+                MateriasDAO.nomeMateriasOrdenadasporMediasAlunos()
+            );
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(this, erro.getMessage());
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void txtFezPesquisarCodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFezPesquisarCodActionPerformed
@@ -805,10 +829,10 @@ public class MinhaTela extends javax.swing.JFrame {
     }//GEN-LAST:event_txtFezRaActionPerformed
 
     private void btnCadastrarFezActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarFezActionPerformed
-       String codigo = txtFezCodMateria.getText();
-       String ra = txtFezRa.getText();
-       float nota = Float.parseFloat(txtFezNota.getText());
-       int frequencia = Integer.parseInt(txtFezFrequencia.getText());
+        String codigo = txtFezCodMateria.getText();
+        String ra = txtFezRa.getText();
+        float nota = Float.parseFloat(txtFezNota.getText());
+        int frequencia = Integer.parseInt(txtFezFrequencia.getText());
 
         try {
             fazemDAO.create(new Fez(ra, codigo, nota, frequencia));
@@ -825,7 +849,7 @@ public class MinhaTela extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCadastrarFezActionPerformed
 
     private void btnExcluirFezActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirFezActionPerformed
-          try {
+        try {
             if (tabela.getSelectedRow() != -1) {
                 DefaultTableModel dtm = (DefaultTableModel) tabela.getModel();
                 String codMateria = (String) dtm.getValueAt(tabela.getSelectedRow(), 0);
@@ -872,7 +896,8 @@ public class MinhaTela extends javax.swing.JFrame {
                     exibirMaterias(materiasDAO.readAll());
                     break;
                 case 2:
-                    exibirFez(fazemDAO.readAll()); break;
+                    exibirFez(fazemDAO.readAll());
+                    break;
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Erro ao exibir");
@@ -884,14 +909,22 @@ public class MinhaTela extends javax.swing.JFrame {
     }//GEN-LAST:event_txtEmailAlunoActionPerformed
 
     private void btnFrequencia0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFrequencia0ActionPerformed
-        try{
-            exibirAlunosFrequenciaZero(alunosDAO.frequenciaZero());
-            
-        }catch(Exception erro){
+        try {
+            exibirAlunos(AlunosDAO.frequenciaZero());
+        } catch (Exception erro) {
             JOptionPane.showMessageDialog(null, "Erro ao exibir alunos com frequencia = 0");
         }
-        
+
     }//GEN-LAST:event_btnFrequencia0ActionPerformed
+
+    private void btnNomesOrdenadosPorMediasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNomesOrdenadosPorMediasActionPerformed
+        try {
+            exibirLista(new String[] {"Nome", "Média"}, AlunosDAO.alunosPorMediaMaterias());
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(this, erro.getMessage());
+        }
+
+    }//GEN-LAST:event_btnNomesOrdenadosPorMediasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -979,18 +1012,14 @@ public class MinhaTela extends javax.swing.JFrame {
         });
         tabela.setModel(model);
     }
-    
-    public void exibirAlunosFrequenciaZero(List<Aluno> lista) {
-        DefaultTableModel model = new DefaultTableModel();
-        model.setColumnCount(3);
-        model.setColumnIdentifiers(new String[]{"RA", "Nome", "Email"});
 
-        lista.forEach((aluno) -> {
-            model.addRow(new String[]{
-                aluno.getRa(),
-                aluno.getNome(),
-                aluno.getEmail()
-            });
+    public void exibirLista(String[] colunas, List<String[]> lista) {
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnCount(colunas.length);
+        model.setColumnIdentifiers(colunas);
+
+        lista.forEach((item) -> {
+            model.addRow(item);
         });
         tabela.setModel(model);
     }

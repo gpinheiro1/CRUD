@@ -180,19 +180,16 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
     }
 
     //METODO RELATORIO
-    public static List<Aluno> alunosPorMediaMaterias() throws Exception {
-        List<Aluno> alunos = new ArrayList<>();
+    public static List<String[]> alunosPorMediaMaterias() throws Exception {
+        List<String[]> alunos = new ArrayList<>();
         String sql = "alunosPorMediaMaterias_sp";
         BDSQLServer.COMANDO.prepareStatement(sql);
         MeuResultSet rs = (MeuResultSet) BDSQLServer.COMANDO.executeQuery();
         while (rs.next()) {
-            alunos.add(
-                new Aluno(
-                    rs.getString("ra"),
-                    rs.getString("nome"),
-                    rs.getString("email")
-                )
-            );
+            alunos.add(new String[]{
+                rs.getString("nome"),
+                Float.toString(rs.getFloat("media"))
+            });
         }
         return alunos;
     }

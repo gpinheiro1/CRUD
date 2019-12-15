@@ -142,6 +142,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Alunos Ordenados por M&#xe9;dias"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNomesOrdenadosPorMediasActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JTabbedPane" name="abas">
 
