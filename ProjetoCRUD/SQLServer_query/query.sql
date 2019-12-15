@@ -2,8 +2,8 @@ create table Aluno(
 ra varchar(6) primary key,
 nome varchar(50) not null,
 email varchar(30) not null
-)
-select * from Aluno
+	)
+	select * from Aluno
 
 create table Materia(
 codMateria varchar(10) primary key,
@@ -75,4 +75,7 @@ order by
 	avg(f.nota);
 
 
-SELECT * FROM Aluno WHERE ra = '19385'
+SELECT * FROM Aluno 
+
+
+UPDATE ALUNO SET email = 'email@vc.com' WHERE ra = 19333

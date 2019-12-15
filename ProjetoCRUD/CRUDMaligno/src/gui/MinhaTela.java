@@ -6,8 +6,10 @@
 package gui;
 
 import daos.AlunosDAO;
+import daos.FazemDAO;
 import daos.MateriasDAO;
 import dbos.Aluno;
+import dbos.Fez;
 import dbos.Materia;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -21,6 +23,7 @@ public class MinhaTela extends javax.swing.JFrame {
 
     AlunosDAO alunosDAO;
     MateriasDAO materiasDAO;
+    FazemDAO fazemDAO;
 
     /**
      * Creates new form MinhaTela
@@ -29,6 +32,7 @@ public class MinhaTela extends javax.swing.JFrame {
         initComponents();
         materiasDAO = new MateriasDAO();
         alunosDAO = new AlunosDAO();
+        fazemDAO = new FazemDAO();
     }
 
     /**
@@ -73,7 +77,7 @@ public class MinhaTela extends javax.swing.JFrame {
         jPanel15 = new javax.swing.JPanel();
         txtFezCodMateria = new javax.swing.JTextField();
         txtFezFrequencia = new javax.swing.JTextField();
-        txtFezNomeMateria = new javax.swing.JTextField();
+        txtFezRa = new javax.swing.JTextField();
         txtFezNota = new javax.swing.JTextField();
         btnCadastrarFez = new javax.swing.JButton();
         btnExcluirFez = new javax.swing.JButton();
@@ -120,8 +124,13 @@ public class MinhaTela extends javax.swing.JFrame {
         });
 
         btnFrequencia0.setText("Frequência 0%");
+        btnFrequencia0.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFrequencia0ActionPerformed(evt);
+            }
+        });
 
-        btnNomesOrdenadosPorMedias.setText("Nomes Ordenados por Médias");
+        btnNomesOrdenadosPorMedias.setText("Alunos Ordenados por Médias");
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Aluno"));
 
@@ -401,11 +410,11 @@ public class MinhaTela extends javax.swing.JFrame {
             }
         });
 
-        txtFezNomeMateria.setBorder(javax.swing.BorderFactory.createTitledBorder("Matéria"));
-        txtFezNomeMateria.setName("txtNomeMateria"); // NOI18N
-        txtFezNomeMateria.addActionListener(new java.awt.event.ActionListener() {
+        txtFezRa.setBorder(javax.swing.BorderFactory.createTitledBorder("RA do Aluno"));
+        txtFezRa.setName("txtNomeMateria"); // NOI18N
+        txtFezRa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFezNomeMateriaActionPerformed(evt);
+                txtFezRaActionPerformed(evt);
             }
         });
 
@@ -450,7 +459,7 @@ public class MinhaTela extends javax.swing.JFrame {
                         .addComponent(txtFezCodMateria, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtFezNota, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txtFezNomeMateria, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtFezRa, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtFezFrequencia)
                     .addGroup(jPanel15Layout.createSequentialGroup()
                         .addComponent(btnCadastrarFez)
@@ -468,7 +477,7 @@ public class MinhaTela extends javax.swing.JFrame {
                     .addComponent(txtFezCodMateria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtFezNota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtFezNomeMateria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtFezRa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtFezFrequencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -492,7 +501,7 @@ public class MinhaTela extends javax.swing.JFrame {
 
         jPanel14.setBorder(javax.swing.BorderFactory.createTitledBorder("Pesquisar"));
 
-        txtFezPesquisarCod.setBorder(javax.swing.BorderFactory.createTitledBorder("Código da Matéria"));
+        txtFezPesquisarCod.setBorder(javax.swing.BorderFactory.createTitledBorder("RA do aluno"));
         txtFezPesquisarCod.setName("txtPesquisaAluno"); // NOI18N
         txtFezPesquisarCod.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -542,8 +551,6 @@ public class MinhaTela extends javax.swing.JFrame {
                 .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 120, Short.MAX_VALUE))
         );
-
-        AbaFez.getAccessibleContext().setAccessibleName("Fez");
 
         abas.addTab("Fez", jPanel3);
 
@@ -634,24 +641,25 @@ public class MinhaTela extends javax.swing.JFrame {
         String ra = txtRaAluno.getText();
         String nome = txtNomeAluno.getText();
         String email = txtEmailAluno.getText();
-        
+
         if (ra.length() != 5) {
             JOptionPane.showMessageDialog(null, "RA inválido");
             return;
         }
-        
+
         if (nome.length() == 0 && email.length() == 0) {
             JOptionPane.showMessageDialog(null, "Digite um e-mail ou nome para ser atualizado");
             return;
         }
 
         try {
-            if (nome.length() > 0 && email.length() == 0)
+            if (nome.length() > 0 && email.length() == 0) {
                 alunosDAO.updateNome(ra, nome);
-            else if (email.length() > 0 && nome.length() == 0)
+            } else if (email.length() > 0 && nome.length() == 0) {
                 alunosDAO.updateEmail(ra, nome);
-            else
+            } else {
                 alunosDAO.update(new Aluno(ra, nome, email));
+            }
             exibirAlunos(alunosDAO.readAll());
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Erro ao atualizar aluno");
@@ -697,21 +705,21 @@ public class MinhaTela extends javax.swing.JFrame {
     private void btnAlterarMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarMateriaActionPerformed
         String codigo = txtCodigoMateria.getText();
         String materia = txtNomeMateria.getText();
-        
+
         if (codigo.length() != 5) {
             JOptionPane.showMessageDialog(null, "Código da matéria inválido");
             return;
         }
-        
+
         if (materia.length() == 0) {
             JOptionPane.showMessageDialog(null, "Digite o nome da matéria a ser atualizada");
             return;
         }
 
         try {
-                materiasDAO.update(new Materia(codigo, materia));
-                exibirMaterias(materiasDAO.readAll());
-                JOptionPane.showMessageDialog(null, "Matéria atualizada com sucesso");
+            materiasDAO.update(new Materia(codigo, materia));
+            exibirMaterias(materiasDAO.readAll());
+            JOptionPane.showMessageDialog(null, "Matéria atualizada com sucesso");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Erro ao atualizar matéria");
         }
@@ -777,23 +785,72 @@ public class MinhaTela extends javax.swing.JFrame {
     }//GEN-LAST:event_txtFezPesquisarCodActionPerformed
 
     private void btnPesquisarFezActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarFezActionPerformed
-        // TODO add your handling code here:
+        String ra = txtFezPesquisarCod.getText();
+
+        if (ra == null || ra.length() != 5 || verificaSeTemLetra(ra)) {
+            JOptionPane.showMessageDialog(null, "Digite um RA válido");
+            return;
+        }
+
+        try {
+            List<Fez> lista = fazemDAO.read(ra);
+            exibirFez(lista);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao pesquisar dados de aluno");
+        }
     }//GEN-LAST:event_btnPesquisarFezActionPerformed
 
-    private void txtFezNomeMateriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFezNomeMateriaActionPerformed
+    private void txtFezRaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFezRaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtFezNomeMateriaActionPerformed
+    }//GEN-LAST:event_txtFezRaActionPerformed
 
     private void btnCadastrarFezActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarFezActionPerformed
-        // TODO add your handling code here:
+       String codigo = txtFezCodMateria.getText();
+       String ra = txtFezRa.getText();
+       float nota = Float.parseFloat(txtFezNota.getText());
+       int frequencia = Integer.parseInt(txtFezFrequencia.getText());
+
+        try {
+            fazemDAO.create(new Fez(ra, codigo, nota, frequencia));
+            txtFezCodMateria.setText("");
+            txtFezRa.setText("");
+            txtFezNota.setText("");
+            txtFezFrequencia.setText("");
+            JOptionPane.showMessageDialog(null, "Dados de aluno cadastrados com sucesso");
+            exibirFez(fazemDAO.readAll());
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao cadastrar dados de aluno");
+        }
     }//GEN-LAST:event_btnCadastrarFezActionPerformed
 
     private void btnExcluirFezActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirFezActionPerformed
-        // TODO add your handling code here:
+          try {
+            if (tabela.getSelectedRow() != -1) {
+                DefaultTableModel dtm = (DefaultTableModel) tabela.getModel();
+                String codMateria = (String) dtm.getValueAt(tabela.getSelectedRow(), 0);
+                fazemDAO.delete(codMateria);
+                JOptionPane.showMessageDialog(null, "Dados de aluno deletados com sucesso");
+                exibirFez(fazemDAO.readAll());
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Selecione uma linha para exclusão");
+        }
     }//GEN-LAST:event_btnExcluirFezActionPerformed
 
     private void btnAlterarFezActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarFezActionPerformed
-        // TODO add your handling code here:
+        String codigo = txtFezCodMateria.getText();
+        String ra = txtFezRa.getText();
+        float nota = Float.parseFloat(txtFezNota.getText());
+        int frequencia = Integer.parseInt(txtFezFrequencia.getText());
+
+        try {
+            fazemDAO.update(new Fez(ra, codigo, nota, frequencia));
+            exibirFez(fazemDAO.readAll());
+            JOptionPane.showMessageDialog(null, "Dados de aluno atualizados com sucesso");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar dados de aluno");
+        }
     }//GEN-LAST:event_btnAlterarFezActionPerformed
 
     private void txtFezFrequenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFezFrequenciaActionPerformed
@@ -814,7 +871,8 @@ public class MinhaTela extends javax.swing.JFrame {
                 case 1:
                     exibirMaterias(materiasDAO.readAll());
                     break;
-                //case 3: exibirFez(fezDAO.realAll());
+                case 2:
+                    exibirFez(fazemDAO.readAll()); break;
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Erro ao exibir");
@@ -824,6 +882,16 @@ public class MinhaTela extends javax.swing.JFrame {
     private void txtEmailAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailAlunoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtEmailAlunoActionPerformed
+
+    private void btnFrequencia0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFrequencia0ActionPerformed
+        try{
+            exibirAlunosFrequenciaZero(alunosDAO.frequenciaZero());
+            
+        }catch(Exception erro){
+            JOptionPane.showMessageDialog(null, "Erro ao exibir alunos com frequencia = 0");
+        }
+        
+    }//GEN-LAST:event_btnFrequencia0ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -896,6 +964,37 @@ public class MinhaTela extends javax.swing.JFrame {
         tabela.setModel(model);
     }
 
+    public void exibirFez(List<Fez> lista) {
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnCount(4);
+        model.setColumnIdentifiers(new String[]{"RA", "Código da Matéria", "Nota", "Frequência"});
+
+        lista.forEach((fez) -> {
+            model.addRow(new String[]{
+                fez.getRa(),
+                fez.getCodMateria(),
+                fez.getNota() + "",
+                fez.getFrequencia() + ""
+            });
+        });
+        tabela.setModel(model);
+    }
+    
+    public void exibirAlunosFrequenciaZero(List<Aluno> lista) {
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnCount(3);
+        model.setColumnIdentifiers(new String[]{"RA", "Nome", "Email"});
+
+        lista.forEach((aluno) -> {
+            model.addRow(new String[]{
+                aluno.getRa(),
+                aluno.getNome(),
+                aluno.getEmail()
+            });
+        });
+        tabela.setModel(model);
+    }
+
     private boolean verificaSeTemLetra(String string) {
         return string.matches("[a-zA-Z]+");
     }
@@ -940,9 +1039,9 @@ public class MinhaTela extends javax.swing.JFrame {
     private javax.swing.JTextField txtEmailAluno;
     private javax.swing.JTextField txtFezCodMateria;
     private javax.swing.JTextField txtFezFrequencia;
-    private javax.swing.JTextField txtFezNomeMateria;
     private javax.swing.JTextField txtFezNota;
     private javax.swing.JTextField txtFezPesquisarCod;
+    private javax.swing.JTextField txtFezRa;
     private javax.swing.JTextField txtNomeAluno;
     private javax.swing.JTextField txtNomeMateria;
     private javax.swing.JTextField txtPesquisarCodigo;

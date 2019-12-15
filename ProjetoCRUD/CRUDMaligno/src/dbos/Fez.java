@@ -15,6 +15,13 @@ public class Fez implements Cloneable {
 		this.setNota(nota);
 		this.setFrequencia(frequencia);
 	}
+        
+        public Fez(){
+            this.ra = null;
+            this.codMateria = null;
+            this.nota = 0f;
+            this.frequencia = 0;
+        }
 	
 	public String getRa() {
 		return this.ra;

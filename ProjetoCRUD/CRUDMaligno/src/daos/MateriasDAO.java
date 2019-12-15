@@ -16,7 +16,7 @@ public class MateriasDAO implements CrudInterface<Materia, String> {
 		if (entidade == null)
 			throw new Exception("O campo materia nao foi preenchido");
                 
-                if(existe(entidade.getCodMateria()))
+                if(existeRa(entidade.getCodMateria()))
                     throw new Exception("Este codigo ja existe na base de dados!");
                 
                 try{
@@ -34,7 +34,7 @@ public class MateriasDAO implements CrudInterface<Materia, String> {
 	}
 
 	@Override
-	public boolean existe(String codMateria) throws Exception {
+	public boolean existeRa(String codMateria) throws Exception {
 		if (codMateria == null || codMateria.length() != 5)
 			throw new Exception("Codigo da materia invalido");
 
@@ -58,7 +58,7 @@ public class MateriasDAO implements CrudInterface<Materia, String> {
 		if (entidade == null)
 			throw new Exception("Campo materia invalido");
 
-		if (!existe(entidade.getCodMateria()))
+		if (!existeRa(entidade.getCodMateria()))
 			throw new Exception("Codigo nao encontrado!");
 
 		try {
@@ -80,7 +80,7 @@ public class MateriasDAO implements CrudInterface<Materia, String> {
 	public void delete(String cod) throws Exception {
 		if(cod == null)
 			throw new Exception("Codigo invalido");
-		if(!existe(cod))
+		if(!existeRa(cod))
 			throw new Exception("O codigo nao existe");
 		
 		try {
@@ -96,11 +96,9 @@ public class MateriasDAO implements CrudInterface<Materia, String> {
 	}
         
         //METODO RELATORIO
-        public static List<Materia> nomeDasMateriasSemReprovacao() throws Exception{
+        public static List<Materia> nomeMateriasSemReprovacao() throws Exception{
             List<Materia> listaMaterias = new ArrayList<>();
-            String sql = "SELECT M.NOMEMATERIA FROM MATERIA M, FEZ F WHERE " +
-                         "M.CODMATERIA = F.CODMATERIA GROUP BY M.NOMEMATERIA " +
-                         "HAVING AVG(F.NOTA)>= 5";
+            String sql = "nomeMateriasSemReprovacao_sp";
             BDSQLServer.COMANDO.prepareStatement(sql);
             BDSQLServer.COMANDO.executeUpdate();
             MeuResultSet rs = (MeuResultSet) BDSQLServer.COMANDO.executeQuery();
@@ -114,11 +112,9 @@ public class MateriasDAO implements CrudInterface<Materia, String> {
         }
         
         //METODO RELATORIO
-        public static List<Materia> nomeDasMateriasOrdenadasporMedias() throws Exception{
+        public static List<Materia> nomeMateriasOrdenadasporMediasAlunos() throws Exception{
              List<Materia> listaMaterias = new ArrayList<>();
-            String sql = "SELECT M.NOMEMATERIA FROM MATERIA M, FEZ F WHERE " +
-                         "M.CODMATERIA = F.CODMATERIA GROUP BY M.NOMEMATERIA " +
-                         "ORDER BY AVG(F.NOTA)";
+            String sql = "nomeMateriasPorMediaAlunos_sp";
             BDSQLServer.COMANDO.prepareStatement(sql);
             BDSQLServer.COMANDO.executeUpdate();
             MeuResultSet rs = (MeuResultSet) BDSQLServer.COMANDO.executeQuery();

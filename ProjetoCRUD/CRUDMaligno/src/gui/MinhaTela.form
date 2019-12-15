@@ -134,10 +134,13 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Frequ&#xea;ncia 0%"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFrequencia0ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnNomesOrdenadosPorMedias">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Nomes Ordenados por M&#xe9;dias"/>
+        <Property name="text" type="java.lang.String" value="Alunos Ordenados por M&#xe9;dias"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JTabbedPane" name="abas">
@@ -589,9 +592,6 @@
                   </Border>
                 </Property>
               </Properties>
-              <AccessibilityProperties>
-                <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Fez"/>
-              </AccessibilityProperties>
 
               <Layout>
                 <DimensionLayout dim="0">
@@ -626,7 +626,7 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="txtFezNota" min="-2" pref="260" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="txtFezNomeMateria" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="txtFezRa" alignment="1" max="32767" attributes="0"/>
                                   <Component id="txtFezFrequencia" alignment="0" max="32767" attributes="0"/>
                                   <Group type="102" attributes="0">
                                       <Component id="btnCadastrarFez" min="-2" max="-2" attributes="0"/>
@@ -649,7 +649,7 @@
                                   <Component id="txtFezNota" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txtFezNomeMateria" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtFezRa" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="txtFezFrequencia" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -687,17 +687,17 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtFezFrequenciaActionPerformed"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="txtFezNomeMateria">
+                    <Component class="javax.swing.JTextField" name="txtFezRa">
                       <Properties>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                            <TitledBorder title="Mat&#xe9;ria"/>
+                            <TitledBorder title="RA do Aluno"/>
                           </Border>
                         </Property>
                         <Property name="name" type="java.lang.String" value="txtNomeMateria" noResource="true"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtFezNomeMateriaActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtFezRaActionPerformed"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtFezNota">
@@ -779,7 +779,7 @@
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder title="C&#xf3;digo da Mat&#xe9;ria"/>
+                        <TitledBorder title="RA do aluno"/>
                       </Border>
                     </Property>
                     <Property name="name" type="java.lang.String" value="txtPesquisaAluno" noResource="true"/>

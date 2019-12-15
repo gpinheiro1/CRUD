@@ -10,7 +10,7 @@ public interface CrudInterface<T, K> {
     
     public List<T> readAll() throws Exception;
 
-    public boolean existe(K cod) throws Exception;
+    public boolean existeRa(K cod) throws Exception;
 
     public boolean update(T entidade) throws Exception;
 

@@ -17,7 +17,7 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
             throw new Exception("O campo aluno nao foi preenchido");
         }
 
-        if (existe(entidade.getRa())) {
+        if (existeRa(entidade.getRa())) {
             throw new Exception("Este RA ja existe");
         }
 
@@ -39,7 +39,7 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
     }
 
     @Override
-    public boolean existe(String ra) throws Exception {
+    public boolean existeRa(String ra) throws Exception {
         if (ra == null || ra.length() != 5) {
             throw new Exception("RA invalido!");
         }
@@ -66,7 +66,7 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
             throw new Exception("Valor de campo invalido");
         }
 
-        if (!existe(entidade.getRa())) {
+        if (!existeRa(entidade.getRa())) {
             throw new Exception("Este RA nao existe");
         }
 
@@ -93,7 +93,7 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
             throw new Exception("Valor de campo invalido");
         }
 
-        if (!existe(ra)) {
+        if (!existeRa(ra)) {
             throw new Exception("Este RA nao existe");
         }
 
@@ -119,7 +119,7 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
             throw new Exception("Valor de campo invalido");
         }
 
-        if (!existe(ra)) {
+        if (!existeRa(ra)) {
             throw new Exception("Este RA nao existe");
         }
 
@@ -145,7 +145,7 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
             throw new Exception("RA invalido");
         }
 
-        if (!existe(ra)) {
+        if (!existeRa(ra)) {
             throw new Exception("Este RA nao existe!");
         }
 
@@ -164,32 +164,35 @@ public class AlunosDAO implements CrudInterface<Aluno, String> {
     //METODO RELATORIO
     public static List<Aluno> frequenciaZero() throws Exception {
         List<Aluno> alunos = new ArrayList<>();
-        String sql = "SELECT A.NOME FROM ALUNO A, FEZ F WHERE F.RA = A.RA AND F.FREQUENCIA = 0";
+        String sql = "frequenciaAlunos_sp";
         BDSQLServer.COMANDO.prepareStatement(sql);
         MeuResultSet rs = (MeuResultSet) BDSQLServer.COMANDO.executeQuery();
         while (rs.next()) {
-            Aluno aluno = new Aluno();
-            aluno.setNome(rs.getString("nome"));
-            aluno.setRa(rs.getString("ra"));
-            aluno.setEmail(rs.getString("email"));
-            alunos.add(aluno);
+            alunos.add(
+                new Aluno(
+                    rs.getString("ra"),
+                    rs.getString("nome"),
+                    rs.getString("email")
+                )
+            );
         }
         return alunos;
     }
 
     //METODO RELATORIO
-    public static List<Aluno> nomesPorMediaDeAlunos() throws Exception {
+    public static List<Aluno> alunosPorMediaMaterias() throws Exception {
         List<Aluno> alunos = new ArrayList<>();
-        String sql = "SELECT A.NOME FROM ALUNO A, FEZ F, MATERIA M WHERE"
-                + "A.RA = F.RA AND M.CODMATERIA = F.CODMATERIA GROUP BY A.NOME ORDER BY AVG(F.NOTA)";
+        String sql = "alunosPorMediaMaterias_sp";
         BDSQLServer.COMANDO.prepareStatement(sql);
         MeuResultSet rs = (MeuResultSet) BDSQLServer.COMANDO.executeQuery();
         while (rs.next()) {
-            Aluno alu = new Aluno();
-            alu.setNome(rs.getString("nome"));
-            alu.setRa(rs.getString("ra"));
-            alu.setEmail(rs.getString("email"));
-            alunos.add(alu);
+            alunos.add(
+                new Aluno(
+                    rs.getString("ra"),
+                    rs.getString("nome"),
+                    rs.getString("email")
+                )
+            );
         }
         return alunos;
     }
